@@ -4,14 +4,16 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import Panel from "./pages/Panel";
+import Verify from "./pages/Verify";
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      {/* Verificación: la raíz también recibe la respuesta de Discord (?code=…). */}
+      <Route path={"/"} component={Verify} />
+      <Route path={"/panel"} component={Panel} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
