@@ -6,7 +6,6 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 
-
 function Router() {
   return (
     <Switch>
@@ -18,20 +17,21 @@ function Router() {
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
-          <Toaster />
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              classNames: {
+                toast:
+                  "!bg-[#14131d] !border-white/15 !text-white !shadow-[0_10px_30px_rgba(0,0,0,.5)]",
+                description: "!text-white/60",
+              },
+            }}
+          />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

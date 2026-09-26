@@ -8,6 +8,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-display: "Outfit", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-amber-brand: var(--amber-brand);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -43,74 +49,81 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
+  /* Marca Imperio Shop */
+  --brand: #ff0042;
+  --brand-soft: #ff6b8f;
+  --amber-brand: #ff7b00;
+  --primary: #ff0042;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #ff0042;
+  --sidebar-primary-foreground: #ffffff;
+  --chart-1: #ff0042;
+  --chart-2: #ff7b00;
+  --chart-3: #ff6b8f;
+  --chart-4: #b91c3c;
+  --chart-5: #7f1d3a;
   --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --background: #0b0b12;
+  --foreground: #ffffff;
+  --card: #12111a;
+  --card-foreground: #ffffff;
+  --popover: #171622;
+  --popover-foreground: #ffffff;
+  --secondary: #1d1c2a;
+  --secondary-foreground: #c9cad8;
+  --muted: #171622;
+  --muted-foreground: #9a9bb0;
+  --accent: #1d1c2a;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #ff0042;
+  --sidebar: #0f0f18;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: #1d1c2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #ff0042;
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --brand: #ff0042;
+  --brand-soft: #ff6b8f;
+  --amber-brand: #ff7b00;
+  --primary: #ff0042;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #ff0042;
+  --sidebar-primary-foreground: #ffffff;
+  --background: #0b0b12;
+  --foreground: #ffffff;
+  --card: #12111a;
+  --card-foreground: #ffffff;
+  --popover: #171622;
+  --popover-foreground: #ffffff;
+  --secondary: #1d1c2a;
+  --secondary-foreground: #c9cad8;
+  --muted: #171622;
+  --muted-foreground: #9a9bb0;
+  --accent: #1d1c2a;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #ff0042;
+  --chart-1: #ff0042;
+  --chart-2: #ff7b00;
+  --chart-3: #ff6b8f;
+  --chart-4: #b91c3c;
+  --chart-5: #7f1d3a;
+  --sidebar: #0f0f18;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: #1d1c2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #ff0042;
 }
 
 @layer base {
@@ -167,11 +180,204 @@
     }
   }
 
-  @media (min-width: 1024px) {
+@media (min-width: 1024px) {
     .container {
       padding-left: 2rem; /* 32px - desktop padding */
       padding-right: 2rem;
       max-width: 1280px; /* Standard content width */
     }
+  }
+}
+
+/* ==========================================================================
+   Imperio Shop · capa de marca
+   ========================================================================== */
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -26px, 0) scale(1.06);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-11px);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 22px rgba(255, 0, 66, 0.42);
+  }
+  50% {
+    box-shadow: 0 0 34px rgba(255, 0, 66, 0.7);
+  }
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+    background-color: var(--background);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Fondo ambiental: halos de marca + rejilla técnica */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 520px at 12% -8%, rgba(255, 0, 66, 0.16), transparent 65%),
+      radial-gradient(760px 460px at 88% 4%, rgba(255, 123, 0, 0.1), transparent 62%),
+      radial-gradient(700px 700px at 50% 108%, rgba(255, 0, 66, 0.08), transparent 70%),
+      var(--background);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    background-size: 62px 62px;
+    mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+    -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+  }
+
+  body.is-loading {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: rgba(255, 0, 66, 0.4);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0b0b12;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2a2839;
+    border: 2px solid #0b0b12;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3b384f;
+  }
+}
+
+@layer components {
+  /* Degradado de marca reutilizable */
+  .bg-brand-gradient {
+    background-image: linear-gradient(90deg, #ff0042 0%, #ff7b00 100%);
+  }
+
+  .text-gradient-brand {
+    background-image: linear-gradient(90deg, #ff0042 0%, #ff7b00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Aparición al hacer scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1),
+      transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Cinta infinita */
+  .marquee-track {
+    animation: marquee 34s linear infinite;
+  }
+
+  .marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
