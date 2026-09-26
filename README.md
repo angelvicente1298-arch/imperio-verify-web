@@ -60,7 +60,7 @@ Crea estas variables en tu servicio de hosting (Vercel, Railway, Render, VPS…)
 | `DISCORD_GUILD_ID` | Recomendada | ID del servidor. Si falta o es inválido, se detecta solo. |
 | `DISCORD_VERIFIED_ROLE_ID` | Recomendada | ID del rol de verificado. Si falta, busca uno llamado «Verificado». |
 | `DISCORD_REDIRECT_URI` | Opcional | Fuerza la URL de retorno si usas un dominio fijo. |
-| `VERIFY_MIN_ACCOUNT_DAYS` | Opcional | Antigüedad mínima de la cuenta (por defecto `30`). |
+| `VERIFY_MIN_ACCOUNT_DAYS` | Opcional | Antigüedad mínima de la cuenta (por defecto `5`). |
 | `VERIFY_MAX_ACCOUNTS_PER_IP` | Opcional | Cuentas por conexión (por defecto `2`). |
 | `VERIFY_MAX_ACCOUNTS_PER_DEVICE` | Opcional | Cuentas por dispositivo (por defecto `2`). |
 | `VERIFY_MAX_RISK` | Opcional | Riesgo máximo permitido (por defecto `40`). |

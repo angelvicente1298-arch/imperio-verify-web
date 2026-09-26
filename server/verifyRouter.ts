@@ -15,6 +15,7 @@ import {
   avatarUrl,
   buildAuthorizeUrl,
   clientIp,
+  config,
   daysBetween,
   evaluateRisk,
   exchangeCode,
@@ -55,7 +56,8 @@ export const verifyRouter = router({
     return {
       configured: isConfigured(),
       missing,
-      minAccountDays: Number(process.env.VERIFY_MIN_ACCOUNT_DAYS ?? 30),
+      // Se lee de la configuración central para que la web y el motor coincidan.
+      minAccountDays: config.minAccountDays,
       vpnProtection: true,
       multiAccountProtection: true,
       // Si la URL de retorno no está registrada en Discord, se avisa en la web.

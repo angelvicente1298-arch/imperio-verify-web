@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  config,
   daysBetween,
   evaluateRisk,
   hostOf,
@@ -42,6 +43,28 @@ describe("evaluateRisk", () => {
     const result = evaluateRisk(baseInput);
     expect(result.decision).toBe("allow");
     expect(result.reasons).toHaveLength(0);
+  });
+
+  it("exige 5 días de antigüedad: 4 días se bloquea, 5 días se permite", () => {
+    expect(config.minAccountDays).toBe(5);
+
+    // 4 días: cuenta nueva → bloqueada.
+    const cuatro = evaluateRisk({ ...baseInput, accountAgeDays: 4 });
+    expect(cuatro.decision).toBe("block");
+    expect(cuatro.reasons.some(r => r.code === "account_too_new" && r.hard)).toBe(true);
+    expect(cuatro.reasons.find(r => r.code === "account_too_new")?.text).toContain("4 días");
+
+    // 5 días exactos: ya cumple el mínimo (el resto de señales está limpio).
+    const cinco = evaluateRisk({ ...baseInput, accountAgeDays: 5 });
+    expect(cinco.decision).toBe("allow");
+    expect(cinco.reasons.some(r => r.code === "account_too_new")).toBe(false);
+  });
+
+  it("marca como reciente una cuenta con menos del triple del mínimo", () => {
+    // El umbral es 5 días, así que el aviso blando salta por debajo de 15.
+    const result = evaluateRisk({ ...baseInput, accountAgeDays: 10 });
+    expect(result.decision).toBe("allow");
+    expect(result.reasons.some(r => r.code === "account_recent")).toBe(true);
   });
 
   it("bloquea siempre una conexión con VPN o proxy", () => {

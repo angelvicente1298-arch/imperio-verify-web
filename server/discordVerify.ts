@@ -12,6 +12,18 @@ export const DISCORD_API = "https://discord.com/api/v10";
 
 /* ------------------------------------------------------------ configuración */
 
+/**
+ * Lee un número de configuración sin sorpresas: si la variable falta, está
+ * vacía o no es un número válido, se usa el valor por defecto. Evita que una
+ * variable vacía desactive un control de seguridad (Number("") sería 0).
+ */
+function numEnv(value: string | undefined, fallback: number, min = 0): number {
+  if (value === undefined || value.trim() === "") return fallback;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < min) return fallback;
+  return parsed;
+}
+
 export const config = {
   clientId: process.env.DISCORD_CLIENT_ID ?? "",
   clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
@@ -19,14 +31,14 @@ export const config = {
   guildId: process.env.DISCORD_GUILD_ID ?? "",
   verifiedRoleId: process.env.DISCORD_VERIFIED_ROLE_ID ?? "",
   redirectUriOverride: process.env.DISCORD_REDIRECT_URI ?? "",
-  /** Días mínimos de antigüedad de la cuenta. */
-  minAccountDays: Number(process.env.VERIFY_MIN_ACCOUNT_DAYS ?? 30),
+  /** Días mínimos de antigüedad de la cuenta (5 por defecto). */
+  minAccountDays: numEnv(process.env.VERIFY_MIN_ACCOUNT_DAYS, 5, 0),
   /** Cuentas distintas permitidas por IP. 2 = se bloquea la segunda. */
-  maxAccountsPerIp: Number(process.env.VERIFY_MAX_ACCOUNTS_PER_IP ?? 2),
+  maxAccountsPerIp: numEnv(process.env.VERIFY_MAX_ACCOUNTS_PER_IP, 2, 1),
   /** Cuentas distintas permitidas por dispositivo. */
-  maxAccountsPerDevice: Number(process.env.VERIFY_MAX_ACCOUNTS_PER_DEVICE ?? 2),
+  maxAccountsPerDevice: numEnv(process.env.VERIFY_MAX_ACCOUNTS_PER_DEVICE, 2, 1),
   /** Puntaje de riesgo que ya no permite entrar. */
-  maxRisk: Number(process.env.VERIFY_MAX_RISK ?? 40),
+  maxRisk: numEnv(process.env.VERIFY_MAX_RISK, 40, 1),
   ipqsKey: process.env.IPQUALITYSCORE_API_KEY ?? "",
 };
 
