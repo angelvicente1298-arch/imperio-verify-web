@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   daysBetween,
   evaluateRisk,
+  hostOf,
   isPrivateIp,
   makeTicket,
+  redirectStatus,
   sha256,
   signState,
   snowflakeToDate,
@@ -139,5 +141,39 @@ describe("utilidades", () => {
     expect(a.length).toBeGreaterThan(8);
     expect(sha256("hola")).toBe(sha256("hola"));
     expect(sha256("hola")).not.toBe(sha256("hola2"));
+  });
+});
+
+describe("URL de retorno (redirect)", () => {
+  it("extrae el dominio sin barra final", () => {
+    expect(hostOf("https://imperioshop-mhfz2s3t.manus.space")).toBe(
+      "imperioshop-mhfz2s3t.manus.space",
+    );
+    // Con y sin barra final dan el mismo dominio: por eso se comparan dominios
+    // y no cadenas exactas, que es lo que hacía fallar la vuelta desde Discord.
+    expect(hostOf("https://imperioshop-mhfz2s3t.manus.space/")).toBe(
+      hostOf("https://imperioshop-mhfz2s3t.manus.space"),
+    );
+    expect(hostOf("no-es-una-url")).toBe("");
+  });
+
+  it("la URL que se envía a Discord es una de las registradas", async () => {
+    const status = await redirectStatus("https://ejemplo-cualquiera.test");
+    if (status.registered.length === 0) {
+      console.warn("    (sin URLs registradas en la app: se omite la comprobación)");
+      return;
+    }
+    // Lo importante: nunca se inventa una URL, siempre sale de la lista oficial.
+    expect(status.registered).toContain(status.used);
+    console.log(`    → URLs registradas: ${status.registered.join(", ")}`);
+    console.log(`    → URL usada: ${status.used} (coincide: ${status.ok})`);
+  });
+
+  it("informa qué URL falta registrar cuando el dominio no coincide", async () => {
+    const status = await redirectStatus("https://dominio-no-registrado-xyz.test");
+    if (status.registered.length === 0) return;
+    // Si el dominio pedido no está, se usa uno registrado (nunca se falla).
+    expect(status.used).toBeTruthy();
+    expect(status.suggested).toBe("https://dominio-no-registrado-xyz.test");
   });
 });

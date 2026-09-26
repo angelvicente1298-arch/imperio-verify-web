@@ -219,6 +219,37 @@ export default function Verify() {
           </div>
         )}
 
+        {/* Aviso: la URL de retorno no está registrada en Discord */}
+        {status.data?.configured && status.data.redirectOk === false && (
+          <div className="mb-5 rounded-2xl border border-amber-500/35 bg-amber-500/10 px-4.5 py-4">
+            <p className="flex items-center gap-2 font-display text-[13.5px] font-semibold text-amber-200">
+              <AlertTriangle className="h-4 w-4" strokeWidth={2} />
+              Falta registrar este dominio en Discord
+            </p>
+            <p className="mt-1.5 text-[12.5px] leading-relaxed text-amber-100/70">
+              Discord rechaza la vuelta si la dirección exacta no está en la lista permitida. Añade
+              esta URL en <strong>OAuth2 → Redirects</strong> y guarda:
+            </p>
+            <code className="mt-2.5 block overflow-x-auto rounded-lg border border-amber-500/25 bg-black/30 px-3 py-2 font-mono text-[11.5px] text-amber-100">
+              {status.data.redirectSuggested}
+            </code>
+            {status.data.redirectRegistered.length > 0 && (
+              <p className="mt-2 text-[11.5px] text-amber-100/50">
+                Registradas ahora: {status.data.redirectRegistered.join(" · ")}
+              </p>
+            )}
+            <a
+              href="https://discord.com/developers/applications"
+              target="_blank"
+              rel="noopener"
+              className="mt-3 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-amber-200 underline decoration-amber-200/40 underline-offset-4 hover:decoration-amber-200"
+            >
+              Abrir Discord Developer Portal
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        )}
+
         {/* Tarjeta principal */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(180deg,#14131d_0%,#12111a_100%)] shadow-[0_24px_60px_-12px_rgba(0,0,0,.8)]">
           <span className="absolute inset-x-0 top-0 h-[3px] bg-brand-gradient shadow-[0_0_12px_#ff0042]" />

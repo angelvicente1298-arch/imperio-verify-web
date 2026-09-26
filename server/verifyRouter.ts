@@ -14,7 +14,6 @@ import {
   addGuildMember,
   avatarUrl,
   buildAuthorizeUrl,
-  callbackUrl,
   clientIp,
   daysBetween,
   evaluateRisk,
@@ -25,6 +24,7 @@ import {
   lookupIp,
   makeTicket,
   missingConfig,
+  redirectStatus,
   sha256,
   signState,
   snowflakeToDate,
@@ -48,27 +48,39 @@ function originFrom(headers: RequestHeaders, fallback: string): string {
 
 export const verifyRouter = router({
   /** Estado de la configuración para la pantalla inicial. */
-  status: publicProcedure.query(() => {
+  status: publicProcedure.query(async ({ ctx }) => {
     const missing = missingConfig();
+    const origin = originFrom(ctx.req.headers as RequestHeaders, "http://localhost:3000");
+    const redirect = await redirectStatus(origin);
     return {
       configured: isConfigured(),
       missing,
       minAccountDays: Number(process.env.VERIFY_MIN_ACCOUNT_DAYS ?? 30),
       vpnProtection: true,
       multiAccountProtection: true,
+      // Si la URL de retorno no está registrada en Discord, se avisa en la web.
+      redirectOk: redirect.ok,
+      redirectUsed: redirect.used,
+      redirectRegistered: redirect.registered,
+      redirectSuggested: redirect.suggested,
     };
   }),
 
   /** Genera la URL del Discord Developer Portal para iniciar la verificación. */
   startLink: publicProcedure
     .input(contextSchema.optional())
-    .query(({ ctx }) => {
+    .query(async ({ ctx }) => {
       const origin = originFrom(ctx.req.headers as RequestHeaders, "http://localhost:3000");
       const state = signState();
+      const url = await buildAuthorizeUrl(origin, state);
+      const redirect = await redirectStatus(origin);
       return {
-        url: buildAuthorizeUrl(origin, state),
+        url,
         state,
-        redirectUri: callbackUrl(origin),
+        redirectUri: redirect.used,
+        redirectOk: redirect.ok,
+        redirectRegistered: redirect.registered,
+        redirectSuggested: redirect.suggested,
         configured: isConfigured(),
         missing: missingConfig(),
       };

@@ -49,6 +49,102 @@ export function missingConfig(): string[] {
 
 const NUMERIC_ID = /^\d{17,20}$/;
 
+/* ------------------------------------------------- URL de retorno (redirect) */
+
+type AppInfo = { id: string; name: string; redirect_uris?: string[] | null };
+let cachedApp: AppInfo | null = null;
+
+/** Lee la ficha de la aplicación (incluye las URLs de retorno registradas). */
+export async function applicationInfo(force = false): Promise<AppInfo | null> {
+  if (cachedApp && !force) return cachedApp;
+  try {
+    const res = await fetch(`${DISCORD_API}/applications/@me`, {
+      headers: { Authorization: `Bot ${config.botToken}` },
+    });
+    if (!res.ok) return null;
+    cachedApp = (await res.json()) as AppInfo;
+    return cachedApp;
+  } catch {
+    return null;
+  }
+}
+
+/** Dominio de una URL (sin barra final ni protocolo), para comparar. */
+export function hostOf(value: string): string {
+  try {
+    return new URL(value).host;
+  } catch {
+    return "";
+  }
+}
+
+function isLocalhost(value: string): boolean {
+  const host = hostOf(value);
+  return host.startsWith("localhost") || host.startsWith("127.0.0.1");
+}
+
+/**
+ * URL de retorno que hay que enviar a Discord.
+ *
+ * Discord exige que coincida **exactamente** con una de las registradas en el
+ * Developer Portal (una barra final de diferencia ya la invalida). Por eso aquí
+ * se leen las URLs registradas y se devuelve la que corresponde al dominio
+ * actual, en lugar de construirla a mano.
+ */
+export async function callbackUrl(origin: string): Promise<string> {
+  if (config.redirectUriOverride) return config.redirectUriOverride;
+
+  const app = await applicationInfo();
+  const registered = (app?.redirect_uris ?? []).filter(Boolean);
+  const host = hostOf(origin);
+
+  // 1) Coincidencia de dominio con el sitio actual (la situación normal).
+  const match = registered.find(uri => hostOf(uri) === host);
+  if (match) return match;
+
+  // 2) Sin coincidencia: se usa una registrada que no sea de desarrollo, para
+  //    que la verificación pueda completarse aunque se entre por otro dominio.
+  const production = registered.find(uri => !isLocalhost(uri));
+  if (production) {
+    console.warn(
+      `[Discord] El dominio ${host} no está registrado en el Developer Portal. Se usará ${production}.`,
+    );
+    return production;
+  }
+
+  if (registered.length > 0) return registered[0];
+
+  // 3) Sin ninguna registrada: se avisa en la interfaz.
+  return origin;
+}
+
+/**
+ * Diagnóstico para la interfaz: si la URL de retorno coincide o no con las
+ * registradas, y cuál hay que añadir en el Developer Portal si falta.
+ */
+export async function redirectStatus(origin: string): Promise<{
+  ok: boolean;
+  used: string;
+  registered: string[];
+  suggested: string;
+}> {
+  const used = await callbackUrl(origin);
+  const app = await applicationInfo(true);
+  const registered = ((app?.redirect_uris ?? []).filter(Boolean) as string[]) ?? [];
+  const host = hostOf(used);
+
+  // Es válida si su dominio está entre los registrados.
+  const ok = registered.some(uri => hostOf(uri) === host);
+
+  return {
+    ok,
+    used,
+    registered,
+    // Lo que debería registrarse para que funcione desde este dominio.
+    suggested: registered.find(uri => hostOf(uri) === hostOf(origin)) ?? origin,
+  };
+}
+
 /* ------------------------------------------- resolución automática de destino */
 
 /**
@@ -136,18 +232,12 @@ export async function resolveTarget(force = false): Promise<Target> {
   return cachedTarget;
 }
 
-export function callbackUrl(origin: string): string {
-  // La raíz del sitio recibe la respuesta de Discord (?code=…) y el frontend la
-  // procesa por tRPC. Es una única URL que registrar en el Developer Portal.
-  return config.redirectUriOverride || `${origin}/`;
-}
-
 /* ---------------------------------------------------------- oauth de Discord */
 
-export function buildAuthorizeUrl(origin: string, state: string): string {
+export async function buildAuthorizeUrl(origin: string, state: string): Promise<string> {
   const params = new URLSearchParams({
     client_id: config.clientId,
-    redirect_uri: callbackUrl(origin),
+    redirect_uri: await callbackUrl(origin),
     response_type: "code",
     // guilds.join permite añadir a la persona al servidor con su propio token.
     scope: "identify email guilds.join",
@@ -180,7 +270,7 @@ export async function exchangeCode(code: string, origin: string): Promise<string
     client_secret: config.clientSecret,
     grant_type: "authorization_code",
     code,
-    redirect_uri: callbackUrl(origin),
+    redirect_uri: await callbackUrl(origin),
   });
 
   const res = await fetch(`${DISCORD_API}/oauth2/token`, {
